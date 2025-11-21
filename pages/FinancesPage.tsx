@@ -2,7 +2,10 @@ import React, { useState, useMemo } from 'react';
 import Card from '../components/Card';
 import { useTransactions } from '../contexts/TransactionsContext';
 import type { Transaction } from '../types';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { 
+    PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip,
+    LineChart, Line, XAxis, YAxis, CartesianGrid
+} from 'recharts';
 import { 
     WalletIcon, 
     ChartPieIcon,
@@ -99,6 +102,41 @@ const FinancesPage: React.FC = () => {
         return { totalIncome: income, totalExpenses: totalExp, expenseData: chartData };
     }, [transactions]);
     
+    const monthlyTrendData = useMemo(() => {
+        const dataByMonth: { [key: string]: { entradas: number; saidas: number } } = {};
+        const monthLabels: string[] = [];
+        const today = new Date();
+
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+            const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
+            const monthLabel = new Intl.DateTimeFormat('pt-BR', { month: 'short' }).format(d);
+            const formattedLabel = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1).replace('.', '');
+            monthLabels.push(formattedLabel);
+            dataByMonth[monthKey] = { entradas: 0, saidas: 0 };
+        }
+
+        const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1);
+        const relevantTransactions = transactions.filter(tx => new Date(tx.date) >= sixMonthsAgo);
+
+        relevantTransactions.forEach(tx => {
+            const txDate = new Date(tx.date + 'T00:00:00');
+            const monthKey = `${txDate.getFullYear()}-${txDate.getMonth()}`;
+            if (dataByMonth[monthKey]) {
+                if (tx.type === 'entrada') {
+                    dataByMonth[monthKey].entradas += tx.amount;
+                } else {
+                    dataByMonth[monthKey].saidas += tx.amount;
+                }
+            }
+        });
+
+        return Object.keys(dataByMonth).map((key, index) => ({
+            name: monthLabels[index],
+            ...dataByMonth[key],
+        }));
+    }, [transactions]);
+
     const groupedTransactions = useMemo(() => {
         const groups: Record<string, Transaction[]> = {};
         if (!transactions) return groups;
@@ -261,6 +299,40 @@ const FinancesPage: React.FC = () => {
           </div>
         )}
       </Card>
+      
+      <Card title="Tendência Mensal (Últimos 6 Meses)">
+        {monthlyTrendData.some(d => d.entradas > 0 || d.saidas > 0) ? (
+            <div className="relative" style={{ width: '100%', height: 300 }}>
+                <ResponsiveContainer>
+                    <LineChart data={monthlyTrendData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.2} />
+                        <XAxis dataKey="name" stroke="currentColor" fontSize={12} tickLine={false} axisLine={false} />
+                        <YAxis stroke="currentColor" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value: number) => `R$${value/1000}k`} />
+                        <Tooltip
+                            contentStyle={{
+                                backgroundColor: '#1A1A1A',
+                                borderColor: '#292929',
+                                borderRadius: '12px',
+                                color: '#FFFFFF'
+                            }}
+                            cursor={{ fill: 'rgba(112, 64, 255, 0.2)' }}
+                            labelStyle={{ fontWeight: 'bold' }}
+                            formatter={(value: number, name: string) => [`R$ ${formatCurrency(value)}`, name.charAt(0).toUpperCase() + name.slice(1)]}
+                        />
+                        <Legend wrapperStyle={{fontSize: "14px"}} />
+                        <Line type="monotone" dataKey="entradas" stroke="#52FFB8" strokeWidth={2} name="Entradas" dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                        <Line type="monotone" dataKey="saidas" stroke="#7040FF" strokeWidth={2} name="Saídas" dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+        ) : (
+            <div className="text-center py-10 text-light-text-secondary dark:text-gray-400">
+                <ChartPieIcon className="w-12 h-12 mx-auto mb-2" />
+                <p>Não há dados suficientes para exibir a tendência.</p>
+            </div>
+        )}
+      </Card>
+
 
       <Card title="Histórico de Transações">
         {Object.keys(groupedTransactions).length > 0 ? (
