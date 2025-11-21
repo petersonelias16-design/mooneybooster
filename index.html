@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Money Booster</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7040FF',
+            secondary: '#0D0D0D',
+            'neon-green': '#52FFB8',
+            'digital-gold': '#F2C94C',
+            'dark-1': '#1A1A1A',
+            'dark-2': '#292929',
+            'white-text': '#FFFFFF',
+            // Light Theme
+            'light-bg': '#F9FAFB',
+            'light-card': '#FFFFFF',
+            'light-border': '#E5E7EB',
+            'light-text': '#111827',
+            'light-text-secondary': '#6B7281'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+            display: ['Poppins', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+    .dark body {
+      background-color: #0D0D0D;
+      color: #FFFFFF;
+      background-image: radial-gradient(circle at 50% 0%, rgba(112, 64, 255, 0.15) 0%, rgba(13, 13, 13, 0) 40%);
+    }
+    .light body {
+      background-color: #F9FAFB;
+      color: #111827;
+    }
+    .glowing-border {
+      border: 1px solid transparent;
+      position: relative;
+      background-clip: padding-box;
+    }
+    .dark .glowing-border {
+        background: linear-gradient(#1A1A1A, #1A1A1A) padding-box,
+                    linear-gradient(145deg, #7040FF, #52FFB8) border-box;
+    }
+    .light .glowing-border {
+        background: linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+                    linear-gradient(145deg, #7040FF, #52FFB8) border-box;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 10px rgba(112, 64, 255, 0.4), 0 0 20px rgba(82, 255, 184, 0.4); }
+      50% { box-shadow: 0 0 20px rgba(112, 64, 255, 0.7), 0 0 40px rgba(82, 255, 184, 0.7); }
+    }
+    .glowing-border-animated {
+      animation: pulse-glow 4s infinite ease-in-out;
+    }
+    @keyframes fade-in {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.4.1",
+    "@heroicons/react/": "https://aistudiocdn.com/@heroicons/react@^2.2.0/"
+  }
+}
+</script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
