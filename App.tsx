@@ -8,6 +8,7 @@ import RewardsPage from './pages/RewardsPage';
 import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
 import OnboardingPage from './pages/OnboardingPage';
+import { TransactionsProvider } from './contexts/TransactionsContext';
 
 type Theme = 'dark' | 'light';
 interface ThemeContextType {
@@ -75,15 +76,17 @@ function App() {
 
   return (
     <ThemeContext.Provider value={themeValue}>
-      {!isLoggedIn ? (
-        <LoginPage onLogin={handleLogin} />
-      ) : showOnboarding ? (
-        <OnboardingPage onComplete={handleOnboardingComplete}>
-            <MainApp />
-        </OnboardingPage>
-      ) : (
-        <MainApp />
-      )}
+      <TransactionsProvider>
+        {!isLoggedIn ? (
+          <LoginPage onLogin={handleLogin} />
+        ) : showOnboarding ? (
+          <OnboardingPage onComplete={handleOnboardingComplete}>
+              <MainApp />
+          </OnboardingPage>
+        ) : (
+          <MainApp />
+        )}
+      </TransactionsProvider>
     </ThemeContext.Provider>
   );
 }

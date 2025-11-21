@@ -17,7 +17,7 @@ const Header: React.FC = () => {
             <path d="M12 22V12" stroke="#52FFB8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M17 4.5L7 9.5" stroke="#7040FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-        <h1 className="text-xl font-display font-bold text-light-text dark:text-white-text">Money Booster</h1>
+        <h1 className="text-xl font-display font-bold text-light-text dark:text-white-text">Money Booster 2.0</h1>
       </div>
       <div>
         <UserCircleIcon className="w-8 h-8 text-primary" />
